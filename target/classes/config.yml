@@ -1,0 +1,16 @@
+blocked-commands:
+  - spawn
+  - kit
+  - tpa
+  - tpaccept
+  - deny
+  - factions
+  - f
+  - friends
+  - fr
+  - locations
+  - lc
+  - killbox
+  - kb
+  - cosmetics
+  - cos
