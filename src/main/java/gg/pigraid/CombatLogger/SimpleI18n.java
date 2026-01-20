@@ -59,7 +59,7 @@ public class SimpleI18n {
     }
 
     public String tr(Locale locale, String key, Object... params) {
-        String localeStr = locale.toString();
+        String localeStr = (locale != null) ? locale.toString() : "en_US";
         Map<String, String> lang = languages.getOrDefault(localeStr, languages.get("en_US"));
         if (lang == null) {
             return key;
