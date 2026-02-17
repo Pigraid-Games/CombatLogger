@@ -8,12 +8,10 @@ import cn.nukkit.event.entity.EntityDamageByEntityEvent;
 import cn.nukkit.event.player.PlayerCommandPreprocessEvent;
 import cn.nukkit.event.player.PlayerDeathEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
-import cn.nukkit.item.Item;
-import cn.nukkit.math.Vector3;
-import cn.nukkit.plugin.Plugin;
 import cn.nukkit.plugin.PluginBase;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * CombatLogger - Prevents players from using certain commands while in combat
@@ -21,7 +19,7 @@ import java.util.*;
  */
 public class CombatLogger extends PluginBase implements Listener {
     private static final Set<String> blockedCommands = new HashSet<>();
-    private static final Map<UUID, Long> cooldowns = new HashMap<>();
+    private static final Map<UUID, Long> cooldowns = new ConcurrentHashMap<>();
     private static final int COOLDOWN_TICKS = 500; // 25 seconds (500 ticks / 20 ticks per second)
     public static SimpleI18n i18n;
 
@@ -105,23 +103,9 @@ public class CombatLogger extends PluginBase implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        Long lastHit = cooldowns.get(player.getUniqueId());
-
-        // If player logged out while in combat, drop their items
-        if (lastHit != null) {
-            long elapsedTicks = (System.currentTimeMillis() - lastHit) / 50;
-            if (elapsedTicks < COOLDOWN_TICKS) {
-                // Player combat logged - drop inventory
-                Item[] loot = player.getDrops();
-                for (Item item : loot) {
-                    player.getLevel().dropItem(player.getPosition(), item);
-                }
-                player.getInventory().clearAll();
-            }
-        }
-
-        cooldowns.remove(player.getUniqueId());
+        // Only clean up combat state - item dropping on combat log is handled
+        // by KitPvPEssentials' InventorySyncManager which also manages DB sync
+        cooldowns.remove(event.getPlayer().getUniqueId());
     }
 
     private void registerCommand(String command) {

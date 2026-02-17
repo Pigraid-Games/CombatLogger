@@ -30,7 +30,7 @@ public class SimpleI18n {
                     Map<String, String> translations = parseLanguageFile(stream);
                     languages.put(locale, translations);
                 }
-            } catch (Exception e) {
+            } catch (java.io.IOException | NullPointerException e) {
                 plugin.getLogger().error("Failed to load language: " + locale, e);
             }
         }
@@ -52,7 +52,7 @@ public class SimpleI18n {
                     translations.put(key, value);
                 }
             }
-        } catch (Exception e) {
+        } catch (java.io.IOException e) {
             plugin.getLogger().error("Failed to parse language file", e);
         }
         return translations;

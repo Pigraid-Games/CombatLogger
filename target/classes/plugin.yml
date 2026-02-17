@@ -1,6 +1,0 @@
-name: CombatLogger
-main: gg.pigraid.CombatLogger.CombatLogger
-version: 1.0.0
-api: ["1.0.0"]
-author: PigRaid
-description: Prevents players from using certain commands while in combat
